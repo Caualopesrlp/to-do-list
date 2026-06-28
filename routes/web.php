@@ -8,3 +8,6 @@ Route::get('/', function () {
 });
 
 Route::resource('tarefas', TarefaController::class);
+
+Route::patch('/tarefas/{id}/toggle', [TarefaController::class, 'toggle'])
+    ->name('tarefas.toggle');

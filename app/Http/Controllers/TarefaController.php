@@ -2,63 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreTarefaRequest;
+use App\Services\Interfaces\TarefaServiceInterface;
 
 class TarefaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        protected TarefaServiceInterface $service
+    ) {}
+
     public function index()
     {
-        //
+        $search = request('search');
+        $sort = request('sort', 'tarefa');
+
+        $tarefas = $this->service->listarTarefas($search, $sort);
+
+        return view('tarefas.index', compact('tarefas', 'sort'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('tarefas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreTarefaRequest $request)
     {
-        //
+        $this->service->criarTarefas($request->validated());
+
+        return redirect()
+            ->route('tarefas.index')
+            ->with('success', 'Tarefa criada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        $tarefa = $this->service->buscarPorId($id);
+
+        return view('tarefas.edit', compact('tarefa'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(StoreTarefaRequest $request, string $id)
     {
-        //
+        $this->service->atualizarTarefas($id, $request->validated());
+
+        return redirect()
+            ->route('tarefas.index')
+            ->with('success', 'Tarefa atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $this->service->deletarTarefas($id);
+
+        return redirect()
+            ->route('tarefas.index')
+            ->with('success', 'Tarefa exlcuída com suceso!');
+    }
+
+    public function toggle(int $id)
+    {
+        $this->service->toggleStatus($id);
+
+        return redirect()
+            ->route('tarefas.index')
+            ->with('success', 'Status atualizado com sucesso!');
     }
 }
