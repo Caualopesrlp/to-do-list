@@ -1,111 +1,133 @@
 @extends('layouts.app')
 
-@section('title', 'Lista de Tarefas')
+@section('title', 'Minhas Tarefas')
 
 @section('content')
 
-    <h2>Lista de Tarefas</h2>
+<h2>Minhas tarefas</h2>
 
-    @if(session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
+{{-- SEARCH --}}
+<form action="{{ route('tarefas.index') }}" method="GET" class="search">
 
-    <form action="{{ route('tarefas.index') }}" method="GET">
-        <input
-            type="text"
-            name="search"
-            placeholder="Pesquisar tarefa..."
-            value="{{ request('search') }}"
-        >
+    <input
+        type="text"
+        name="search"
+        placeholder="Pesquisar tarefa..."
+        value="{{ request('search') }}"
+    >
 
-        <button type="submit">Buscar</button>
-    </form>
+    <button type="submit" class="btn btn-primary">
+        Buscar
+    </button>
 
-    <br>
+</form>
 
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>Tarefa</th>
-                <th>Descrição</th>
-                <th>Prioridade</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
+{{-- SORT (SEPARADO, discreto) --}}
+<form action="{{ route('tarefas.index') }}" method="GET" class="search">
 
-        <tbody>
+    <select name="filter" class="filter-select" onchange="this.form.submit()">
 
-        @forelse($tarefas as $tarefa)
+        <option value="">Todos</option>
 
-            <tr>
+        <option value="prioridade" {{ request('filter') == 'prioridade' ? 'selected' : '' }}>
+            Por prioridade
+        </option>
 
-                <td>{{ $tarefa->tarefa }}</td>
+        <option value="status" {{ request('filter') == 'status' ? 'selected' : '' }}>
+            Por status
+        </option>
 
-                <td>{{ $tarefa->descricao }}</td>
+    </select>
 
-                <td>{{ ucfirst($tarefa->prioridade) }}</td>
+</form>
 
-                <td>
+{{-- LISTA --}}
+<div class="tasks">
+
+    @forelse($tarefas as $tarefa)
+
+        <div class="task">
+
+            <div class="task-header">
+
+                <div class="task-title">
+
                     @if($tarefa->status)
-                        ✔ Concluída
+                        ✅
                     @else
-                        ⏳ Pendente
+                        ⏳
                     @endif
-                </td>
 
-                <td>
+                    {{ $tarefa->tarefa }}
 
-                    {{-- EDITAR --}}
-                    <a href="{{ route('tarefas.edit', $tarefa->id) }}">
+                </div>
+
+                <span class="badge {{ $tarefa->prioridade }}">
+                    {{ ucfirst($tarefa->prioridade) }}
+                </span>
+
+            </div>
+
+            @if($tarefa->descricao)
+                <div class="task-description">
+                    {{ $tarefa->descricao }}
+                </div>
+            @endif
+
+            <div class="task-footer">
+
+                <span class="badge {{ $tarefa->status ? 'concluida' : 'pendente' }}">
+                    {{ $tarefa->status ? 'Concluída' : 'Pendente' }}
+                </span>
+
+                <div class="task-actions">
+
+                    <a href="{{ route('tarefas.edit', $tarefa->id) }}"
+                       class="btn btn-primary">
                         Editar
                     </a>
 
-                    {{-- TOGGLE STATUS --}}
-                    <form action="{{ route('tarefas.toggle', $tarefa->id) }}"
-                          method="POST"
-                          style="display:inline;">
-
+                    <form action="{{ route('tarefas.toggle', $tarefa->id) }}" method="POST">
                         @csrf
                         @method('PATCH')
 
-                        @if($tarefa->status)
-                            <button type="submit">Desmarcar</button>
-                        @else
-                            <button type="submit">Concluir</button>
-                        @endif
-
+                        <button type="submit" class="btn btn-success">
+                            {{ $tarefa->status ? 'Reabrir' : 'Concluir' }}
+                        </button>
                     </form>
 
-                    {{-- EXCLUIR --}}
-                    <form action="{{ route('tarefas.destroy', $tarefa->id) }}"
-                          method="POST"
-                          style="display:inline;">
-
+                    <form action="{{ route('tarefas.destroy', $tarefa->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
 
-                        <button type="submit">
+                        <button type="submit"
+                                class="btn btn-danger"
+                                onclick="return confirm('Deseja realmente excluir esta tarefa?')">
                             Excluir
                         </button>
-
                     </form>
 
-                </td>
+                </div>
 
-            </tr>
+            </div>
 
-        @empty
+        </div>
 
-            <tr>
-                <td colspan="5">
-                    Nenhuma tarefa encontrada.
-                </td>
-            </tr>
+    @empty
 
-        @endforelse
+        <div class="card">
+            <p>Nenhuma tarefa encontrada.</p>
+        </div>
 
-        </tbody>
-    </table>
+    @endforelse
+
+</div>
+
+{{-- PAGINAÇÃO --}}
+@if($tarefas->hasPages())
+    <div style="margin-top:25px;">
+        {{ $tarefas->withQueryString()->links() }}
+    </div>
+@endif
 
 @endsection

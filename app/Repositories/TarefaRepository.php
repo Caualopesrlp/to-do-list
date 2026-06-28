@@ -8,12 +8,19 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TarefaRepository implements TarefaRepositoryInterface
 {
-    public function all(?string $search = null, string $sort = 'tarefa',): LengthAwarePaginator
+    public function all(?string $search = null, string $sort = 'tarefa'): LengthAwarePaginator
     {
+        $camposPermitidos = ['tarefa', 'status', 'prioridade'];
+        $sort = in_array($sort, $camposPermitidos) ? $sort : 'tarefa';
+
         return Tarefa::when($search, function ($query, $search) {
             $query->where('tarefa', 'like', "%{$search}%");
         })
-            ->orderBy($sort)
+            ->when($sort === 'prioridade', function ($query) {
+                $query->orderByRaw("CASE prioridade WHEN 'alta' THEN 1 WHEN 'media' THEN 2 WHEN 'baixa' THEN 3 END");
+            }, function ($query) use ($sort) {
+                $query->orderBy($sort);
+            })
             ->paginate(10);
     }
 

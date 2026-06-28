@@ -4,60 +4,112 @@
 
 @section('content')
 
-    <h2>Nova Tarefa</h2>
+<h2>Nova tarefa</h2>
 
-    @if ($errors->any())
+@if ($errors->any())
+
+    <div class="alert alert-error">
+
         <ul>
+
             @foreach ($errors->all() as $erro)
+
                 <li>{{ $erro }}</li>
+
             @endforeach
+
         </ul>
-    @endif
+
+    </div>
+
+@endif
+
+<div class="card">
 
     <form action="{{ route('tarefas.store') }}" method="POST">
 
         @csrf
 
-        <div>
-            <label for="tarefa">Tarefa</label><br>
+        <div class="form-group">
+
+            <label for="tarefa">
+                Nome da tarefa
+            </label>
+
             <input
                 type="text"
                 id="tarefa"
                 name="tarefa"
                 value="{{ old('tarefa') }}"
+                placeholder="Ex.: Estudar Laravel"
             >
+
         </div>
 
-        <br>
+        <div class="form-group">
 
-        <div>
-            <label for="descricao">Descrição</label><br>
+            <label for="descricao">
+                Descrição
+            </label>
+
             <textarea
                 id="descricao"
                 name="descricao"
+                placeholder="Opcional..."
             >{{ old('descricao') }}</textarea>
+
         </div>
 
-        <br>
+        <div class="form-group">
 
-        <div>
-            <label for="prioridade">Prioridade</label><br>
+            <label for="prioridade">
+                Prioridade
+            </label>
 
-            <select name="prioridade" id="prioridade">
-                <option value="baixa">Baixa</option>
-                <option value="media">Média</option>
-                <option value="alta">Alta</option>
+            <select
+                id="prioridade"
+                name="prioridade"
+            >
+
+                <option value="baixa"
+                    {{ old('prioridade') == 'baixa' ? 'selected' : '' }}>
+                    Baixa
+                </option>
+
+                <option value="media"
+                    {{ old('prioridade') == 'media' ? 'selected' : '' }}>
+                    Média
+                </option>
+
+                <option value="alta"
+                    {{ old('prioridade') == 'alta' ? 'selected' : '' }}>
+                    Alta
+                </option>
+
             </select>
+
         </div>
 
-        <br>
+        <div class="task-actions">
 
-        <br>
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Salvar tarefa
+            </button>
 
-        <button type="submit">
-            Salvar
-        </button>
+            <a
+                href="{{ route('tarefas.index') }}"
+                class="btn btn-secondary"
+            >
+                Cancelar
+            </a>
+
+        </div>
 
     </form>
+
+</div>
 
 @endsection

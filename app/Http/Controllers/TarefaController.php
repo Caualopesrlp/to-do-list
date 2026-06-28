@@ -14,7 +14,7 @@ class TarefaController extends Controller
     public function index()
     {
         $search = request('search');
-        $sort = request('sort', 'tarefa');
+        $sort = request('filter', 'tarefa');
 
         $tarefas = $this->service->listarTarefas($search, $sort);
 

@@ -4,74 +4,116 @@
 
 @section('content')
 
-    <h2>Editar Tarefa</h2>
+<h2>Editar tarefa</h2>
 
-    @if ($errors->any())
+@if ($errors->any())
+
+    <div class="alert alert-error">
+
         <ul>
+
             @foreach ($errors->all() as $erro)
+
                 <li>{{ $erro }}</li>
+
             @endforeach
+
         </ul>
-    @endif
+
+    </div>
+
+@endif
+
+<div class="card">
 
     <form action="{{ route('tarefas.update', $tarefa->id) }}" method="POST">
 
         @csrf
         @method('PUT')
 
-        <div>
-            <label for="tarefa">Tarefa</label><br>
+        <div class="form-group">
+
+            <label for="tarefa">
+                Nome da tarefa
+            </label>
+
             <input
                 type="text"
                 id="tarefa"
                 name="tarefa"
                 value="{{ old('tarefa', $tarefa->tarefa) }}"
+                placeholder="Ex.: Estudar Laravel"
             >
+
         </div>
 
-        <br>
+        <div class="form-group">
 
-        <div>
-            <label for="descricao">Descrição</label><br>
+            <label for="descricao">
+                Descrição
+            </label>
+
             <textarea
                 id="descricao"
                 name="descricao"
+                placeholder="Opcional..."
             >{{ old('descricao', $tarefa->descricao) }}</textarea>
+
         </div>
 
-        <br>
+        <div class="form-group">
 
-        <div>
-            <label for="prioridade">Prioridade</label><br>
+            <label for="prioridade">
+                Prioridade
+            </label>
 
-            <select name="prioridade" id="prioridade">
+            <select id="prioridade" name="prioridade">
 
-                <option value="baixa"
-                    {{ old('prioridade', $tarefa->prioridade) == 'baixa' ? 'selected' : '' }}>
+                <option
+                    value="baixa"
+                    {{ old('prioridade', $tarefa->prioridade) == 'baixa' ? 'selected' : '' }}
+                >
                     Baixa
                 </option>
 
-                <option value="media"
-                    {{ old('prioridade', $tarefa->prioridade) == 'media' ? 'selected' : '' }}>
+                <option
+                    value="media"
+                    {{ old('prioridade', $tarefa->prioridade) == 'media' ? 'selected' : '' }}
+                >
                     Média
                 </option>
 
-                <option value="alta"
-                    {{ old('prioridade', $tarefa->prioridade) == 'alta' ? 'selected' : '' }}>
+                <option
+                    value="alta"
+                    {{ old('prioridade', $tarefa->prioridade) == 'alta' ? 'selected' : '' }}
+                >
                     Alta
                 </option>
 
             </select>
+
         </div>
 
-        <br>
+        <div class="task-actions">
 
-        <br>
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Salvar alterações
+            </button>
 
-        <button type="submit">
-            Atualizar
-        </button>
+            <a
+                href="{{ route('tarefas.index') }}"
+                class="btn btn-secondary"
+            >
+                Voltar
+            </a>
+
+        </div>
 
     </form>
+
+</div>
 
 @endsection
