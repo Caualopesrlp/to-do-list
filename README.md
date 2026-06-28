@@ -6,7 +6,7 @@ Projeto simples de gerenciamento de tarefas (To Do List) desenvolvido com Larave
 
 ## 📷 Demonstração
 
-vou colocar o print aqui
+<img width="1346" height="622" alt="Screenshot_1" src="https://github.com/user-attachments/assets/04ab48e6-4e1d-4ac4-a23d-e18d3d1084b0" />
 
 ---
 
