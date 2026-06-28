@@ -8,7 +8,7 @@ interface TarefaServiceInterface
     public function criarTarefas(array $data);
     public function atualizarTarefas(int $id, array $data);
     public function deletarTarefas(int $id);
-    public function buscarporId(int $id);
+    public function buscarPorId(int $id);
     public function toggleStatus(int $id);
     
 }

@@ -35,7 +35,7 @@ class TarefaController extends Controller
             ->with('success', 'Tarefa criada com sucesso!');
     }
 
-    public function show(string $id)
+    public function show(int $id)
     {
         //
     }
@@ -62,7 +62,7 @@ class TarefaController extends Controller
 
         return redirect()
             ->route('tarefas.index')
-            ->with('success', 'Tarefa exlcuída com suceso!');
+            ->with('success', 'Tarefa exlcuída com sucesso!');
     }
 
     public function toggle(int $id)
