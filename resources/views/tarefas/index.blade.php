@@ -6,7 +6,6 @@
 
 <h2>Minhas tarefas</h2>
 
-{{-- SEARCH --}}
 <form action="{{ route('tarefas.index') }}" method="GET" class="search">
 
     <input
@@ -22,7 +21,6 @@
 
 </form>
 
-{{-- SORT (SEPARADO, discreto) --}}
 <form action="{{ route('tarefas.index') }}" method="GET" class="search">
 
     <select name="filter" class="filter-select" onchange="this.form.submit()">
@@ -41,7 +39,6 @@
 
 </form>
 
-{{-- LISTA --}}
 <div class="tasks">
 
     @forelse($tarefas as $tarefa)
@@ -123,7 +120,6 @@
 
 </div>
 
-{{-- PAGINAÇÃO --}}
 @if($tarefas->hasPages())
     <div style="margin-top:25px;">
         {{ $tarefas->withQueryString()->links() }}
